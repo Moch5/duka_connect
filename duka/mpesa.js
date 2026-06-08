@@ -1,12 +1,13 @@
-import { getAccessToken } from "./auth.js";
-
 import express from "express";
+import { getAccessToken } from "./auth.js";
+import { generateThankYouMessageDirect } from "./ai.js";
+
 const router = express.Router();
 
 // console.log("MPESA ROUTES LOADED"); //for test
 
 
-// Create STK endpoint
+// Create STK endpoint---------------------------------
 router.post("/pay", async (req, res) => {
     try{
 
@@ -102,12 +103,12 @@ router.post("/pay", async (req, res) => {
         });
 
     
-//Express callback route; without this Mpesa sends back data but server has no way to see it
+//Express callback route; without this Mpesa sends back data but server has no way to see it----------------------------
 
 router.post("/callback", (req, res) => {
     try {
 
-        console.log("CALLBACK RECEIVED"); // 👈 added here
+        console.log("CALLBACK RECEIVED"); 
 
         const callback = req.body.Body.stkCallback;
         const resultCode = callback.ResultCode;
@@ -119,7 +120,7 @@ router.post("/callback", (req, res) => {
             console.log("PAYMENT SUCCESS");
             console.log(resultDesc);
 
-            const metadata = callback.CallbackMetadata?.Item;
+            const metadata = callback.CallbackMetadata?.Item; //? makes it not crash if no metadata found
 
             if (metadata) {
             const amount = metadata.find(item => item.Name === "Amount")?.Value;
@@ -206,6 +207,21 @@ router.get("/payment-status/:checkoutRequestID", async (req, res) => {
         }
         console.log("Payment status response:", data);
 
+        if (data.ResultCode === "0") {
+            // return thank you if payment successful
+            const thankYouMessage = await generateThankYouMessageDirect(
+                "Customer",
+                500
+            );
+        
+            return res.status(200).json({
+                message: "Payment status successful",
+                data,
+                thankYouMessage
+            });
+        }
+        
+        // fallback (ONLY if not successful)
         return res.status(200).json({
             message: "Payment status retrieved",
             data
@@ -219,7 +235,7 @@ router.get("/payment-status/:checkoutRequestID", async (req, res) => {
 });
 
 
-//SEND AI GENERATED THANK YOU NOTE
+//SEND AI GENERATED THANK YOU NOTE(if ai.js is reusable, then it would only be called here )
 
 router.post("/thank-you", async (req, res) => {
     try {
