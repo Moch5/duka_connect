@@ -29,8 +29,8 @@ A backend system for a simple e-commerce platform integrating M-Pesa STK Push pa
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/duka-connect.git
-cd duka-connect
+git clone https://github.com/Moch5/duka_connect.git
+cd duka_connect
 ```
 
 ### 2. Install dependencies
@@ -44,11 +44,11 @@ npm install
 ```env
 PORT=3000
 
-GOOGLE_API_KEY=your_gemini_api_key
+GOOGLE_API_KEY=gemini_api_key
 
-SANDBOX_MPESA_SHORTCODE=your_shortcode
-SANDBOX_MPESA_PASSKEY=your_passkey
-SANDBOX_MPESA_CALLBACK_URL=your_ngrok_url/callback
+SANDBOX_MPESA_SHORTCODE=shortcode
+SANDBOX_MPESA_PASSKEY=passkey
+SANDBOX_MPESA_CALLBACK_URL=https://skittle-certainly-prompter.ngrok-free.dev//callback
 ```
 
 ### 4. Run the server
@@ -110,7 +110,7 @@ Server runs at: `http://localhost:3000`
 ```json
 {
   "phone": "254724997755",
-  "amount": 500
+  "amount": 1
 }
 ```
 
@@ -119,7 +119,7 @@ Server runs at: `http://localhost:3000`
 ```json
 {
   "name": "Sylvia",
-  "amount": 500
+  "amount": 1
 }
 ```
 
@@ -135,9 +135,5 @@ Server runs at: `http://localhost:3000`
 
 ---
 
-## Notes
 
-- Uses M-Pesa sandbox environment
-- Ngrok is required for callback testing
-- Do not commit `.env` file to GitHub
 
